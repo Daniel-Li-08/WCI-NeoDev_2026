@@ -9,8 +9,10 @@ userRoutes = Blueprint("userRoutes", __name__)
 
 @userRoutes.route('/user/create', methods=["POST"])         
 def createUser():
-    data = request.get_json()
-    obj:dict = json.loads(data)
+    obj = request.get_json()
+    if (type(obj) == str):
+        obj = json.loads(obj)
+
     params = ['name','pw','prime']
 
     if not paramsEqual(params,obj.keys()):
@@ -38,8 +40,9 @@ def createUser():
 
 @userRoutes.route('/user/delete', methods=["POST"])
 def deleteUser():
-    data = request.get_json()
-    obj:dict = json.loads(data)
+    obj = request.get_json()
+    if (type(obj) == str):
+        obj = json.loads(obj)
     params = ['name','pw']
 
     if not paramsEqual(params,obj.keys()):
@@ -59,8 +62,9 @@ def deleteUser():
 
 @userRoutes.route('/user/<name>', methods=["POST"])
 def getUser(name):
-    data = request.get_json()
-    obj:dict = json.loads(data)
+    obj = request.get_json()
+    if (type(obj) == str):
+        obj = json.loads(obj)
 
     
     userRef = db.collection('Users').document(obj["name"])
