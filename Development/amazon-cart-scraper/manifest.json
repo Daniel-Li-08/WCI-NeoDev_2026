@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Amazon Cart Scraper",
+  "version": "1.0.0",
+  "description": "Scrape your Amazon shopping cart and export to CSV",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": [
+    "https://www.amazon.com/*",
+    "https://www.amazon.ca/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

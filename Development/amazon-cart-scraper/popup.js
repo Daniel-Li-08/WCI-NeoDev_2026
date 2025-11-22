@@ -1,0 +1,194 @@
+let scrapedData = null;
+
+const scrapeBtn = document.getElementById('scrapeBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const statusEl = document.getElementById('status');
+const resultsEl = document.getElementById('results');
+
+function setStatus(msg, type) {
+  statusEl.textContent = msg;
+  statusEl.className = `status ${type}`;
+}
+
+function clearStatus() {
+  statusEl.className = 'status';
+  statusEl.textContent = '';
+}
+
+function updateResults(items) {
+  document.getElementById('itemCount').textContent = items.length;
+  document.getElementById('totalQty').textContent = 
+    items.reduce((sum, i) => sum + i.quantity, 0);
+  
+  const categories = [...new Set(items.map(i => i.category).filter(Boolean))];
+  document.getElementById('categoryCount').textContent = categories.length;
+  
+  const preview = document.getElementById('itemsPreview');
+  preview.innerHTML = items.slice(0, 5).map(item => `
+    <div class="item-row">
+      <div class="item-title">${escapeHtml(item.title)}</div>
+      <div class="item-meta">Qty: ${item.quantity} | ${escapeHtml(item.category || 'N/A')}</div>
+    </div>
+  `).join('');
+  
+  if (items.length > 5) {
+    preview.innerHTML += `<div class="item-row" style="text-align:center;color:#999;">
+      +${items.length - 5} more items...
+    </div>`;
+  }
+  
+  resultsEl.classList.add('visible');
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function generateCSV(items) {
+  const headers = ['Index', 'Title', 'Product Link', 'Quantity', 'Category', 'ASIN'];
+  const escape = (str) => `"${String(str || '').replace(/"/g, '""')}"`;
+  
+  const rows = items.map(i => [
+    i.index,
+    escape(i.title),
+    escape(i.productLink),
+    i.quantity,
+    escape(i.category),
+    escape(i.asin)
+  ].join(','));
+  
+  return [headers.join(','), ...rows].join('\n');
+}
+
+function downloadCSV(csv) {
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const filename = `amazon_cart_${new Date().toISOString().split('T')[0]}.csv`;
+  
+  chrome.downloads?.download?.({ url, filename, saveAs: true }) ||
+    (() => {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    })();
+}
+
+// Content script to inject
+const scrapeScript = () => {
+  const cartItems = [];
+  
+  const itemContainers = document.querySelectorAll(
+    '[data-item-count], .sc-list-item, [data-asin]:not([data-asin=""])'
+  );
+  
+  const items = itemContainers.length > 0 
+    ? itemContainers 
+    : document.querySelectorAll('.sc-list-item-content, .a-list-item');
+
+  items.forEach((item, idx) => {
+    try {
+      // Product link
+      const linkEl = item.querySelector(
+        'a.sc-product-link, ' +
+        '.sc-item-content-group a[href*="/dp/"], ' +
+        '.a-link-normal[href*="/dp/"], ' +
+        'a[href*="/gp/product/"]'
+      );
+      const productLink = linkEl ? linkEl.href.split('?')[0] : null;
+
+      // Quantity
+      const qtySelect = item.querySelector(
+        'select[name*="quantity"], .sc-quantity-textfield input, input[name*="quantity"]'
+      );
+      const qtySpan = item.querySelector('.sc-item-quantity span, .a-dropdown-prompt');
+      let quantity = 1;
+      if (qtySelect) quantity = parseInt(qtySelect.value, 10) || 1;
+      else if (qtySpan) quantity = parseInt(qtySpan.textContent.trim(), 10) || 1;
+
+      // Category
+      const catEl = item.querySelector(
+        '.sc-product-category, [data-category], .a-size-small.a-color-secondary'
+      );
+      let category = catEl ? catEl.textContent.trim() : null;
+      if (!category) {
+        const byline = item.querySelector('.a-size-small.a-color-link, .a-link-normal.a-size-small');
+        category = byline ? byline.textContent.trim() : 'Unknown';
+      }
+
+      // Title
+      const titleEl = item.querySelector(
+        '.sc-product-title, .a-truncate-cut, .a-list-item .a-link-normal span'
+      );
+      const title = titleEl ? titleEl.textContent.trim() : 'Unknown Product';
+
+      // ASIN
+      const asin = item.getAttribute('data-asin') || 
+        (productLink ? productLink.match(/\/dp\/([A-Z0-9]+)/i)?.[1] : null);
+
+      if (productLink || title !== 'Unknown Product') {
+        cartItems.push({
+          index: idx + 1,
+          title: title.substring(0, 150),
+          productLink: productLink || 'Link not found',
+          quantity,
+          category: category || 'Unknown',
+          asin: asin || 'N/A'
+        });
+      }
+    } catch (e) { /* skip item */ }
+  });
+
+  return cartItems;
+};
+
+// Scrape button handler
+scrapeBtn.addEventListener('click', async () => {
+  scrapeBtn.disabled = true;
+  downloadBtn.disabled = true;
+  resultsEl.classList.remove('visible');
+  setStatus('Scraping cart...', 'loading');
+  
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    
+    if (!tab?.url?.match(/amazon\.(com|ca).*cart/i)) {
+      setStatus('Please navigate to your Amazon cart page first.', 'error');
+      scrapeBtn.disabled = false;
+      return;
+    }
+    
+    const results = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: scrapeScript
+    });
+    
+    scrapedData = results[0]?.result || [];
+    
+    if (scrapedData.length === 0) {
+      setStatus('No items found. Is your cart empty?', 'error');
+      scrapeBtn.disabled = false;
+      return;
+    }
+    
+    setStatus(`Found ${scrapedData.length} item(s)!`, 'success');
+    updateResults(scrapedData);
+    downloadBtn.disabled = false;
+    
+  } catch (err) {
+    setStatus(`Error: ${err.message}`, 'error');
+  }
+  
+  scrapeBtn.disabled = false;
+});
+
+// Download button handler
+downloadBtn.addEventListener('click', () => {
+  if (!scrapedData?.length) return;
+  const csv = generateCSV(scrapedData);
+  downloadCSV(csv);
+  setStatus('CSV downloaded!', 'success');
+});
