@@ -47,7 +47,7 @@ def clearCart():
     if (docRef.get().to_dict() is None):
         return Response("Cart doesn't exist",status=400)
     
-    docRef.set({"items":""})
+    docRef.set({"items":[]})
     
     return Response("Passed",status=200)
 
