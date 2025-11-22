@@ -1,2 +1,0 @@
-[project.scripts]
-app = "main:app"
