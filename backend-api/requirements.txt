@@ -1,0 +1,5 @@
+flask
+firebase-admin
+dotenv
+google.cloud
+google.oauth2
