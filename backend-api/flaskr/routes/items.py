@@ -18,7 +18,7 @@ def addItem():
     if not paramsEqual(params,obj.keys()):
         return Response("Invalid params",status=400)
     
-    docRef = db.collection('Carts').document(cart)
+    docRef = db.collection('Carts').document(obj['cart'])
 
     if (docRef.get().to_dict() is None):
         return Response("Cart doesn't exist",status=400)
