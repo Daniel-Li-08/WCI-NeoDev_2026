@@ -8,7 +8,7 @@ from google.cloud import firestore
 cartRoutes = Blueprint("cartRoutes", __name__)
 
 @cartRoutes.route('/cart/create', methods=["POST"])         
-def createUser():
+def createCart():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
@@ -21,7 +21,7 @@ def createUser():
     collectRef = db.collection('Carts')
 
     docs = collectRef.stream()
-    uids = [doc.get().to_dict()["owner"] for doc in docs]
+    uids = [doc.id for doc in docs]
 
     if (obj["owner"] in uids): 
         return Response("User already has a cart",status=400)
@@ -38,7 +38,7 @@ def createUser():
 
 
 @cartRoutes.route('/cart/delete', methods=["POST"])
-def deleteUser():
+def deleteCart():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
@@ -59,13 +59,17 @@ def deleteUser():
     return Response("Passed",status=200)
 
 
-@cartRoutes.route('/cart/<name>', methods=["GET"])
-def getPrimeStatus(name):
+@cartRoutes.route('/cart/getCart', methods=["POST"])
+def getCart():
     data = request.get_json()
     obj:dict = json.loads(data)
 
+    params = ['owner']
+
+    if not paramsEqual(params,obj.keys()):
+        return Response("Invalid params",status=400)
     
-    userRef = db.collection('Carts').document(obj["name"])
+    userRef = db.collection('Carts').document(obj["owner"])
     if (userRef is None):
         return Response("{}","Carts not found",status=400)
     
@@ -73,4 +77,4 @@ def getPrimeStatus(name):
     
     
 
-    return Response(json.dumps({"name":name,"items":items}),status=200)
+    return Response(json.dumps({"owner":obj["owner"],"items":items}),status=200)
