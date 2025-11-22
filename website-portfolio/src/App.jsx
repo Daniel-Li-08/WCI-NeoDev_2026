@@ -9,6 +9,7 @@ function App() {
 	return (
 		<Router>
 			<Naxbar />
+			
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />

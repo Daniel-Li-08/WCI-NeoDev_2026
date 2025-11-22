@@ -2,27 +2,21 @@ import React from 'react';
 
 const Naxbar = () => {
 	return (
-		<nav className="bg-blue-600 text-white px-4 py-3 flex items-center justify-between shadow-md">
-			<div className="font-bold text-xl">MyPortfolio</div>
-			<ul className="flex space-x-6">
-				<li>
-					<a href="/" className="hover:text-blue-200 transition">
-						Home
-					</a>
-				</li>
-				<li>
-					<a href="/login" className="hover:text-blue-200 transition">
+		<nav className=" text-[#768F6A] px-20 py-3 flex flex-row items-center justify-between shadow-md text-3xl align-middle">
+			<img className="w-64 my-[-4rem] translate-y-[5%]" src="/logo_1.svg"/>
+
+			<div className="w-full flex justify-end gap-20 px-20 align-middle">
+				<a href="/login" className="hover:text-blue-200 transition">
 						Login
-					</a>
-				</li>
-				<li>
-					<a href="/sign-up" className="hover:text-blue-200 transition">
+				</a>
+
+				<a href="/sign-up" className="hover:text-blue-200 transition">
 						Sign Up
-					</a>
-				</li>
-			</ul>
+				</a>
+			</div>
+
 		</nav>
 	);
 };
-
+// 67
 export default Naxbar;
