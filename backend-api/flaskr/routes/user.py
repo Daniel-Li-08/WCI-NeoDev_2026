@@ -61,7 +61,7 @@ def deleteUser():
 
 
 @userRoutes.route('/user/getPrime', methods=["GET"])
-def getUser(name):
+def getUser():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
@@ -78,7 +78,7 @@ def getUser(name):
     
     
 
-    return Response(json.dumps({"name":name,"prime":prime}),status=200)
+    return Response(json.dumps({"name":obj["name"],"prime":prime}),status=200)
 
 
 @userRoutes.route('/user/checkpw', methods=["POST"])
@@ -97,5 +97,5 @@ def checkPw():
     
     if (obj["pw"] != userRef.get().to_dict()["pw"]):
         return Response("Incorrect password",status=400)
-    
-    return Response("Passed",status=200)
+    prime = userRef.get().to_dict()["prime"]
+    return Response(json.dumps({"name":obj["name"],"prime":prime}),status=200)
