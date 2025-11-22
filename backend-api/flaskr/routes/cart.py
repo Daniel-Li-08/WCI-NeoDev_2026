@@ -21,7 +21,7 @@ def createCart():
     collectRef = db.collection('Carts')
 
     docs = collectRef.stream()
-    uids = [doc.get().to_dict()["owner"] for doc in docs]
+    uids = [doc.id for doc in docs]
 
     if (obj["owner"] in uids): 
         return Response("User already has a cart",status=400)

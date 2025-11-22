@@ -14,7 +14,15 @@ def deleteUserTest(name:str,pw:str):
         "pw":pw,
     })).text)
 
+def createCartTest(owner:str):
+    print(requests.post('http://127.0.0.1:5000/cart/create', json=json.dumps({
+        "owner":owner,
+    })).text)
 
-
+def deleteCartTest(owner:str,pw:str):
+    print(requests.post('http://127.0.0.1:5000/cart/delete', json=json.dumps({
+        "owner":owner,
+        "pw":pw
+    })).text)
 # createUserTest("MeMyselfAndI","testPass",True)
-deleteUserTest("MeMyselfAndI","testPass")
+createCartTest("MeMyselfAndI")
