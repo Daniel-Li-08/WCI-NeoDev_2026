@@ -24,5 +24,17 @@ def deleteCartTest(owner:str,pw:str):
         "owner":owner,
         "pw":pw
     })).text)
+
+def getCartTest(owner:str):
+    print(requests.post('http://127.0.0.1:5000/cart/getCart', json=json.dumps({
+        "owner":owner,
+    })).json())
+
+def setCartTest(name:str, owner:str):
+    print(requests.post('http://127.0.0.1:5000/user/setCart', json=json.dumps({
+        "name":name,
+        "owner":owner,
+    })).text)
 # createUserTest("MeMyselfAndI","testPass",True)
-createCartTest("MeMyselfAndI")
+setCartTest("admin","test")
+getCartTest("test")

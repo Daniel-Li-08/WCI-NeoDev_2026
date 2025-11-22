@@ -19,6 +19,8 @@ def createUser():
         return Response("Invalid params",status=400)
     
     collectRef = db.collection('Users')
+    if (obj["name"] == ""):
+        return Response("Name illegal",status=400)
 
     docs = collectRef.stream()
     uids = [doc.id for doc in docs]
@@ -29,7 +31,8 @@ def createUser():
     collectRef.add(
         {
             "pw":obj["pw"],
-            "prime":obj["prime"]
+            "prime":obj["prime"],
+            "cart":""
         },
         obj["name"]
     )
@@ -99,3 +102,28 @@ def checkPw():
         return Response("Incorrect password",status=400)
     prime = userRef.get().to_dict()["prime"]
     return Response(json.dumps({"name":obj["name"],"prime":prime}),status=200)
+
+
+@userRoutes.route('/user/setCart', methods=["POST"])
+def setCart():
+    obj = request.get_json()
+    if (type(obj) == str):
+        obj = json.loads(obj)
+    params = ['name','owner']
+
+    if not paramsEqual(params,obj.keys()):
+        return Response("Invalid params",status=400)
+
+    userRef = db.collection('Carts').document(obj["owner"])
+    if (userRef is None):
+        return Response("{}","Cart not found",status=400)
+
+    userRef = db.collection('Users').document(obj["name"])
+    if (userRef is None):
+        return Response("{}","User not found",status=400)
+    
+    x = userRef.get().to_dict()
+    x['cart'] = obj['owner']
+    userRef.set(x)
+
+    return Response("Joined",status=200)

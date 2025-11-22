@@ -52,18 +52,18 @@ def clearCart():
     return Response("Passed",status=200)
 
 
-@itemRoutes.route('/cart/getLinks', methods=["POST"])         
+@itemRoutes.route('/cart/getCart', methods=["POST"])         
 def getLinks():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
 
-    params = ['cart']
+    params = ['owner']
 
     if not paramsEqual(params,obj.keys()):
         return Response("Invalid params",status=400)
     
-    docRef = db.collection('Carts').document(obj['cart'])
+    docRef = db.collection('Carts').document(obj['owner'])
 
     if (docRef.get().to_dict() is None):
         return Response("Cart doesn't exist",status=400)
@@ -71,4 +71,4 @@ def getLinks():
 
     x = docRef.get().to_dict()['items']
     
-    return Response({"items":x},status=200)
+    return Response(json.dumps({"items":x}),status=200)
