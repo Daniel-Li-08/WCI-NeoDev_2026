@@ -6,7 +6,8 @@ from flask_cors import CORS
 app = create_app()
 
 CORS(app,resources={r"/api/*": {"origins": "*"}},
-     origins=["localhost:5173","https://wci-neo-dev-2025.vercel.app"],
+     origins=["*"],
+     
      allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
