@@ -77,7 +77,7 @@ def getUser(name):
     return Response(json.dumps({"name":name,"prime":prime}),status=200)
 
 
-@userRoutes.route('/user/<name>/checkpw', methods=["GET"])
+@userRoutes.route('/user/<name>/checkpw', methods=["POST"])
 def checkPw(name):
     obj = request.get_json()
     if (type(obj) == str):
