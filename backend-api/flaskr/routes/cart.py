@@ -64,8 +64,12 @@ def getCart():
     data = request.get_json()
     obj:dict = json.loads(data)
 
+    params = ['owner']
+
+    if not paramsEqual(params,obj.keys()):
+        return Response("Invalid params",status=400)
     
-    userRef = db.collection('Carts').document(obj["name"])
+    userRef = db.collection('Carts').document(obj["owner"])
     if (userRef is None):
         return Response("{}","Carts not found",status=400)
     
@@ -73,4 +77,4 @@ def getCart():
     
     
 
-    return Response(json.dumps({"name":obj["name"],"items":items}),status=200)
+    return Response(json.dumps({"owner":obj["owner"],"items":items}),status=200)
