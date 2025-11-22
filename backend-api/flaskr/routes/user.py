@@ -129,7 +129,7 @@ def setCart():
     return Response("Joined",status=200)
 
 @userRoutes.route('/user/getCart', methods=["POST"])
-def setCart():
+def UsergetCart():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
