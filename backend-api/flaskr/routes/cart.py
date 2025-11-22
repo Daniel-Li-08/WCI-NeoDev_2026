@@ -23,8 +23,15 @@ def createCart():
     docs = collectRef.stream()
     uids = [doc.id for doc in docs]
 
+
+
     if (obj["owner"] in uids): 
         return Response("User already has a cart",status=400)
+    
+
+    userRef = db.collection('Users').document(obj['owner'])
+    if (userRef.get().to_dict() is None):
+        return Response("User doesn't exist",status=400)
 
     collectRef.add(
         {
@@ -32,6 +39,10 @@ def createCart():
         },
         obj["owner"]
     )
+
+    x = userRef.get().to_dict()
+    x["cart"] = obj['owner']
+    userRef.set(x)
 
     return Response("Passed",status=200)
 
