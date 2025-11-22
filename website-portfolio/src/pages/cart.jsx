@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddCart from '../components/AddCart';
 import CreateCart from '../components/CreateCart';
 import ViewCart from '../components/ViewCart';
@@ -28,18 +28,18 @@ const Cart = () => {
 
 		const data = await response.json();
 		console.log(data);
+		console.log(isPrime);
 		if (data.cart) {
 			setCart(data.cart);
 			return true;
 		} else {
+			setCart(null);
 			return false;
 		}
 	};
 
 	useEffect(() => {
-		if (!checkCart()) {
-			
-		}
+		checkCart();
 	});
 
 	const loadCart = async () => {
@@ -64,7 +64,7 @@ const Cart = () => {
 	let content;
 	if (cart) {
 		content = <ViewCart />;
-	} else if (isPrime) {
+	} else if (isPrime == "true") {
 		content = <CreateCart />;
 	} else {
 		content = <AddCart />;

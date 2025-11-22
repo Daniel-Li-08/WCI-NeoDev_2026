@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -6,6 +6,13 @@ const Login = () => {
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		const name = localStorage.getItem('name');
+		if (name !== null) {
+			navigate('/cart');
+		}
+
+	});
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		// Handle login logic here
@@ -25,7 +32,6 @@ const Login = () => {
 			);
 
 			if (response.ok) {
-				alert('Login successful!');
 				const data = await response.json();
 				console.log(data);
 				localStorage.setItem('name', username);
@@ -45,16 +51,16 @@ const Login = () => {
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen ">
-			<div className="p-8 rounded shadow-md w-full max-w-sm">
-				<h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+		<div className="flex flex-col items-center justify-center my-[10vw]">
+			<div className="p-8 w-full max-w-[30rem]">
+				<h2 className="text-4xl font-bold mb-6 text-center text-[#768F6A]">Login</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col space-y-4">
 					<input
 						type="text"
 						placeholder="Username"
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
-						className="p-2 border rounded-[0.5rem] focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="p-2 border rounded-[0.5rem] focus:outline-none focus:ring-2 focus:ring-blue placeholder-[#768F6A] bg-[#E1DACD]"
 						required
 					/>
 					<input
@@ -62,12 +68,12 @@ const Login = () => {
 						placeholder="Password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
-						className="p-2 border rounded-[0.5rem] focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="p-2 border rounded-[0.5rem] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-[#768F6A] bg-[#E1DACD]"
 						required
 					/>
 					<button
 						type="submit"
-						className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+						className="text-[#768F6A] bg-[#E1DACD] py-2 rounded hover:bg-blue-200 transition"
 					>
 						Login
 					</button>

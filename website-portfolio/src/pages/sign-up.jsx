@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [isPrime, setIsPrime] = useState(false);
+	const [message, setMessage] = useState(<></>);
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -24,21 +27,28 @@ const SignUp = () => {
 				body: data,
 			}
 		);
-		const stuff = await response.json();
-		console.log(stuff);
+		const stuff = await response.status
+		if (stuff == 200){
+			setMessage(<p className='text-[#768F6A]'>Success</p>)
+		} else {
+			setMessage(<p className='text-red-600'>Failure</p>)
+		}
+		
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen ">
-			<div className=" p-8 rounded shadow-md w-full max-w-sm">
-				<h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+		<>
+
+		<div className="flex flex-col items-center justify-center my-[10vw]">
+			<div className="p-8 w-full max-w-[30rem]">
+				<h2 className="text-4xl font-bold mb-6 text-center text-[#768F6A]">Sign up</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col space-y-4">
 					<input
 						type="text"
 						placeholder="Username"
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
-						className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="p-2 border rounded-[0.5rem] focus:outline-none focus:ring-2 focus:ring-blue placeholder-[#768F6A] bg-[#E1DACD]"
 						required
 					/>
 					<input
@@ -46,26 +56,29 @@ const SignUp = () => {
 						placeholder="Password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
-						className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="p-2 border rounded-[0.5rem] focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-[#768F6A] bg-[#E1DACD]"
 						required
 					/>
-					<label>
+					<label className='flex flex-row'>
 						<input
 							type="checkbox"
 							checked={isPrime}
 							onChange={(e) => setIsPrime(e.target.checked)}
+							className='accent-[#768F6A]'
 						/>
-						Are you a Prime member?
+						<p className='text-[#768F6A] mx-4'>Are you a Prime member?</p>
 					</label>
 					<button
 						type="submit"
-						className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+						className="text-[#768F6A] bg-[#E1DACD] py-2 rounded hover:bg-blue-200 transition"
 					>
 						Sign Up
 					</button>
+					{message}
 				</form>
 			</div>
 		</div>
+		</>
 	);
 };
 
