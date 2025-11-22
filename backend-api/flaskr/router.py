@@ -21,6 +21,8 @@ Documentation
 
 from .routes.user import userRoutes
 from .routes.cart import cartRoutes
+from .routes.items import itemRoutes
 
 routes.register_blueprint(userRoutes,url_prefix='')
+routes.register_blueprint(itemRoutes,url_prefix='')
 routes.register_blueprint(cartRoutes,url_prefix='')
