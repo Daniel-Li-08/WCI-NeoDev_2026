@@ -32,7 +32,7 @@ def addItem():
 
 
 @itemRoutes.route('/cart/clear', methods=["POST"])         
-def addItem():
+def clearCart():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
@@ -53,7 +53,7 @@ def addItem():
 
 
 @itemRoutes.route('/cart/getLinks', methods=["POST"])         
-def addItem():
+def getLinks():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
@@ -68,7 +68,7 @@ def addItem():
     if (docRef.get().to_dict() is None):
         return Response("Cart doesn't exist",status=400)
     
-    
+
     x = docRef.get().to_dict()['items']
     
     return Response({"items":x},status=200)
