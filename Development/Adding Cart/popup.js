@@ -287,8 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
       changeModeBtn._wired = true;
     }
 
-    // Default: hide both panes to avoid flicker
-    if (addFormEl) addFormEl.style.display = 'none';
+    // Always keep the add form visible so "Add Current" (save) button is present.
+    if (addFormEl) addFormEl.style.display = '';
+
+    // Default: hide other panes to avoid flicker
     if (controlsEl) controlsEl.style.display = 'none';
     if (linksListEl) linksListEl.style.display = 'none';
     if (scrapeControlsEl) scrapeControlsEl.style.display = 'none';
@@ -302,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (currentMode === 'addingCart') {
       // show Adding Cart UI
-      if (addFormEl) addFormEl.style.display = '';
       if (controlsEl) controlsEl.style.display = 'flex';
       if (linksListEl) linksListEl.style.display = '';
       if (submitBtn) submitBtn.disabled = false;
@@ -314,14 +315,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (currentMode === 'amazonScraper') {
       // show Scraper UI only
       if (scrapeControlsEl) scrapeControlsEl.style.display = 'flex';
-      // keep results hidden until a scrape occurs; show area if results visible class set
+      // show persisted results if present
       if (scrapeResultsEl && scrapeResultsEl.classList.contains('visible')) scrapeResultsEl.style.display = 'block';
-      if (submitBtn) submitBtn.disabled = true;
+      if (submitBtn) submitBtn.disabled = true; // disable add in scraper mode
       if (openAllBtn) openAllBtn.disabled = true;
       if (scrapeBtnEl) scrapeBtnEl.disabled = false;
       if (downloadBtnEl) downloadBtnEl.disabled = true;
     } else {
-      // no mode selected: show picker by leaving panes hidden
+      // no mode selected: disable actions but keep add form visible in a disabled state
       if (submitBtn) submitBtn.disabled = true;
       if (openAllBtn) openAllBtn.disabled = true;
       if (scrapeBtnEl) scrapeBtnEl.disabled = true;
@@ -361,8 +362,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   openAllBtn.addEventListener('click', async () => {
-    if (currentMode === 'amazonScraper') { alert('Open All disabled in Scraper mode. Change mode to Adding Cart.'); return; }
-    chrome.runtime.sendMessage({ action: 'cycleAll', interval: 3000 });
+    if (currentMode === 'amazonScraper') {
+      // keep the UI guidance but avoid browser alert popup
+      console.warn('Open All is disabled in Scraper mode. Change mode to Adding Cart to use it.');
+      return;
+    }
+
+    // disable button to prevent duplicate clicks while background starts
+    openAllBtn.disabled = true;
+
+    // fire-and-forget: ask background to cycle through all saved links and click add-to-cart on each
+    chrome.runtime.sendMessage({ action: 'cycleAll', interval: 3000 }, (resp) => {
+      try {
+        console.log('cycleAll response:', resp);
+        // no alert/popups shown — UI remains quiet
+      } catch (e) {
+        /* ignore logging errors */
+      } finally {
+        // re-enable the button after the background acknowledged (or after callback)
+        openAllBtn.disabled = false;
+      }
+    });
   });
 
   clearAllBtn.addEventListener('click', async () => {

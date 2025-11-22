@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Login Extension - LOGIN INVALID",
+  "description": "Combined Adding Cart and Amazon Cart Scraper. Choose a mode on first run.",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Quick Links / Amazon Tools"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "activeTab",
+    "downloads"
+  ],
+  "host_permissions": [
+    "*://*.amazon.com/*",
+    "*://*.amazon.co.uk/*",
+    "*://*.amazon.ca/*",
+    "*://*.amazon.*/*"
+  ],
+  "background": {
+    "service_worker": "popup.js"
+  }
+}

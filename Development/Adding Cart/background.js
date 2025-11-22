@@ -1,8 +1,12 @@
-// helper: get active tab
+// helper: get active tab (prefer lastFocusedWindow to avoid returning extension popup)
 function getActiveTab() {
   return new Promise((resolve) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      resolve(tabs && tabs[0]);
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+      if (tabs && tabs.length) return resolve(tabs[0]);
+      // fallback to currentWindow if nothing found
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs2) => {
+        resolve((tabs2 && tabs2[0]) || null);
+      });
     });
   });
 }
@@ -291,10 +295,17 @@ async function cycleLinks(links, interval = 3000) {
 
 // listen for popup messages
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (!msg || !msg.action) return;
+  if (!msg || !msg.action) {
+    return;
+  }
   if (msg.action === 'openAndClick' && msg.link) {
-    openAndClick(msg.link);
+    console.log('background: received openAndClick', msg.link && msg.link.url);
+    openAndClick(msg.link).catch((e) => console.error('openAndClick error', e));
+    // acknowledge receipt immediately
+    sendResponse({ accepted: true });
+    return true; // keep channel open if needed
   } else if (msg.action === 'cycleAll') {
+    console.log('background: received cycleAll, loading savedLinks...');
     // get saved links from storage and start cycling
     chrome.storage.local.get(['savedLinks'], (res) => {
       const links = res.savedLinks || [];
@@ -302,7 +313,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       const filtered = links.filter(l => {
         try { return /\.amazon\./i.test(new URL(l.url).hostname); } catch (e) { return false; }
       });
-      if (filtered.length) cycleLinks(filtered, interval);
+      if (filtered.length) {
+        // acknowledge how many will be processed, then start
+        sendResponse({ started: filtered.length });
+        cycleLinks(filtered, interval).catch((e) => console.error('cycleLinks error', e));
+      } else {
+        // nothing to do
+        sendResponse({ started: 0 });
+      }
     });
+    // indicate we'll call sendResponse asynchronously
+    return true;
   }
 });

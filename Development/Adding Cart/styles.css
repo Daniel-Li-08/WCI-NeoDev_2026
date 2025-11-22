@@ -9,7 +9,14 @@ body{margin:0;background:var(--bg);color:#111;width:360px}
 h1{font-size:16px;margin:0 0 8px}
 form{display:flex;gap:6px;align-items:center}
 form input{flex:1;padding:6px;border:1px solid #ddd;border-radius:4px}
-form button{padding:6px 10px;background:var(--accent);color:#fff;border:none;border-radius:4px}
+form button{
+  padding:6px 10px;
+  background:var(--accent, #2b6ef6); /* ensure visible fallback */
+  color:#fff;
+  border:none;
+  border-radius:4px;
+  display:inline-block; /* ensure visible */
+}
 .controls{margin:8px 0;display:flex;gap:8px}
 .controls button{flex:1;padding:6px;border:1px solid #ddd;border-radius:4px;background:#f5f5f5}
 .links-list{list-style:none;padding:0;margin:0;max-height:300px;overflow:auto}
