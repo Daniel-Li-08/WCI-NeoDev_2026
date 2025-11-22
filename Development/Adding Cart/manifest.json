@@ -1,16 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "Quick Links",
-  "description": "Store frequently used links and open them from a popup.",
+  "name": "Login Extension - Quick Links + Amazon Tools",
+  "description": "Combined Adding Cart and Amazon Cart Scraper. Choose a mode on first run.",
   "version": "1.0",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Quick Links"
+    "default_title": "Quick Links / Amazon Tools"
   },
-  "permissions": ["storage", "tabs", "scripting", "activeTab"],
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "activeTab",
+    "downloads"
+  ],
   "host_permissions": [
     "*://*.amazon.com/*",
     "*://*.amazon.co.uk/*",
+    "*://*.amazon.ca/*",
     "*://*.amazon.*/*"
   ],
   "background": {

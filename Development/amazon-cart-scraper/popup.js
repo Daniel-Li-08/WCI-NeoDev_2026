@@ -141,6 +141,8 @@ const scrapeScript = () => {
           asin: asin || 'N/A'
         });
       }
+
+      // Creates a separate list to send to Vercel server
       if (productLink || title !== 'Unknown Product') {
         sendlist.push({
           productLink: productLink || 'Link not found',
@@ -149,6 +151,7 @@ const scrapeScript = () => {
       }
     } catch (e) { /* skip item */ }
   });
+
 
   const VERCEL_URL = '676869';
 
@@ -164,6 +167,7 @@ const scrapeScript = () => {
 
 // Scrape button handler
 scrapeBtn.addEventListener('click', async () => {
+  console.log('hello?')
   scrapeBtn.disabled = true;
   downloadBtn.disabled = true;
   resultsEl.classList.remove('visible');

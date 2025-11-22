@@ -1,4 +1,4 @@
-:root{
+w:root{
   --bg:#fff;
   --accent:#2b6ef6;
   --muted:#666;
@@ -19,3 +19,20 @@ form button{padding:6px 10px;background:var(--accent);color:#fff;border:none;bor
 .link-actions{margin-top:8px;display:flex;gap:8px}
 .link-actions button{flex:0 0 auto;padding:6px;border:1px solid #ddd;border-radius:4px;background:#fff}
 .empty{padding:12px;color:var(--muted)}
+
+/* enforce 800:1024 aspect ratio for the popup UI container.
+   width can be adjusted (default 320px); height is computed from the ratio. */
+.container {
+  width: 320px;               /* default width inside popup */
+  max-width: 96vw;
+  aspect-ratio: 800 / 1024;   /* locked aspect ratio */
+  overflow: auto;
+}
+
+/* ensure body centers the container in case popup area is larger */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
