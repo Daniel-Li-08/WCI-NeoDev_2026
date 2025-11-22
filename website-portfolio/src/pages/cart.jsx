@@ -1,4 +1,7 @@
 import React, { use, useEffect, useState } from 'react';
+import AddCart from '../components/AddCart';
+import CreateCart from '../components/CreateCart';
+import ViewCart from '../components/ViewCart';
 
 const Cart = () => {
 	const username = localStorage.getItem('name');
@@ -57,12 +60,16 @@ const Cart = () => {
 		console.log(data);
 	};
 
-	return (
-		<div>
-			<h1>Welcome, {username}!</h1>
-			<h2>Here is your cart, {cart}:</h2>
-		</div>
-	);
+	let content;
+	if (cart) {
+		content = <ViewCart />;
+	} else if (isPrime) {
+		content = <CreateCart />;
+	} else {
+		content = <AddCart />;
+	}
+
+	return content;
 };
 
 export default Cart;
