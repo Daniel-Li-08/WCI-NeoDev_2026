@@ -8,7 +8,7 @@ from google.cloud import firestore
 itemRoutes = Blueprint("itemRoutes", __name__)
 
 @itemRoutes.route('/cart/additem', methods=["POST"])         
-def addItem(cart):
+def addItem():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
