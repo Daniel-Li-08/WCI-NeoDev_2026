@@ -23,6 +23,9 @@ def addItem():
     if (docRef.get().to_dict() is None):
         return Response("Cart doesn't exist",status=400)
 
-    docRef.get().to_dict()['items'].append({"link":obj['link'], "quantity":obj['quantity']})
+    x = docRef.get().to_dict()['items']
+    x.append({"link":obj['link'], "quantity":obj['quantity']})
+
+    docRef.set({"items":x})
     
     return Response("Passed",status=200)
