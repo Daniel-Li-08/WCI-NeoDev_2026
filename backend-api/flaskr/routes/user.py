@@ -60,11 +60,15 @@ def deleteUser():
     return Response("Passed",status=200)
 
 
-@userRoutes.route('/user/<name>', methods=["GET"])
+@userRoutes.route('/user/getPrime', methods=["GET"])
 def getUser(name):
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
+    params = ['name']
+
+    if not paramsEqual(params,obj.keys()):
+        return Response("Invalid params",status=400)
     
     userRef = db.collection('Users').document(obj["name"])
     if (userRef is None):
@@ -77,11 +81,15 @@ def getUser(name):
     return Response(json.dumps({"name":name,"prime":prime}),status=200)
 
 
-@userRoutes.route('/user/<name>/checkpw', methods=["POST"])
-def checkPw(name):
+@userRoutes.route('/user/checkpw', methods=["POST"])
+def checkPw():
     obj = request.get_json()
     if (type(obj) == str):
         obj = json.loads(obj)
+    params = ['name','pw']
+
+    if not paramsEqual(params,obj.keys()):
+        return Response("Invalid params",status=400)
 
     userRef = db.collection('Users').document(obj["name"])
     if (userRef is None):

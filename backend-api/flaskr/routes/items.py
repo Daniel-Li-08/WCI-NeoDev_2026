@@ -5,7 +5,7 @@ from lib.utils import *
 from lib.db import db
 from google.cloud import firestore
 
-itemRoutes = Blueprint("userRoutes", __name__)
+itemRoutes = Blueprint("itemRoutes", __name__)
 
 @itemRoutes.route('/cart/additem', methods=["POST"])         
 def createUser(cart):
