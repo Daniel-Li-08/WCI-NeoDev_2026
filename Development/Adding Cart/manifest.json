@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Links",
+  "description": "Store frequently used links and open them from a popup.",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Quick Links"
+  },
+  "permissions": ["storage", "tabs", "scripting", "activeTab"],
+  "host_permissions": [
+    "*://*.amazon.com/*",
+    "*://*.amazon.co.uk/*",
+    "*://*.amazon.*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
