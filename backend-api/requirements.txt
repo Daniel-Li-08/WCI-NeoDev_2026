@@ -3,4 +3,5 @@ firebase-admin
 dotenv
 google-api-python-client
 google-auth-httplib2
+flask_cors
 google-auth-oauthlib
