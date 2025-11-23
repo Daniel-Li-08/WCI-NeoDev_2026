@@ -19,4 +19,3 @@ form button{padding:6px 10px;background:var(--accent);color:#fff;border:none;bor
 .link-actions{margin-top:8px;display:flex;gap:8px}
 .link-actions button{flex:0 0 auto;padding:6px;border:1px solid #ddd;border-radius:4px;background:#fff}
 .empty{padding:12px;color:var(--muted)}
-.button{margin: 0px; text-align: center; font: 14px 'Helvetica Neue'; color: #ffffff; -webkit-text-stroke: #ffffff; background-color: #316a3f}

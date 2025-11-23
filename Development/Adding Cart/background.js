@@ -255,6 +255,7 @@ async function openAndClick(link) {
     // swallow any error and continue to attempt purchase
   }
 
+//TIMING
   await clickAddToCart(tab.id);
   await sleep(500);
   await dismissNoThanks(tab.id, 4, 1000);

@@ -1,4 +1,42 @@
+console.log("Opened");
 const STORAGE_KEY = 'savedLinks';
+
+async function addBackgroundFetch() {
+    console.log("HI");
+    const response = await fetch("https://wci-neo-dev-2025api.vercel.app/cart/getCart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ owner: "test" })
+    });
+ 
+    const cart = await response.json();
+    const items = cart.items || [];
+
+    // Get current saved links
+    await clearAll()
+    chrome.storage.local.get([STORAGE_KEY], (result) => {
+      const links =  [];
+      // Add fetched items
+      items.forEach(item => {
+        links.push({
+          id: makeId(),
+          title: item.link,
+          url: item.link,
+          qty: item.quantity
+        });
+      });
+
+      // Save updated array
+      const obj = {};
+      obj[STORAGE_KEY] = links;
+      chrome.storage.local.set(obj, () => {
+        console.log("Cart items saved:", links);
+      });
+    });
+}
 
 function getLinks() {
   return new Promise((resolve) => {
@@ -35,6 +73,8 @@ function normalizeUrl(url) {
 }
 
 async function render() {
+
+  addBackgroundFetch();
   const list = document.getElementById('linksList');
   list.innerHTML = '';
   const links = await getLinks();
