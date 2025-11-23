@@ -95,9 +95,28 @@ const ViewCart = () => {
 					</h1>
 				)}
 
-				{cartItems.map((item) => (
-					<CartItem item={item} key={item.id || item._id || item.name} />
-				))}
+				<div className="flex flex-col gap-2 items-center justify-center bg-extraLight p-6 rounded-2xl">
+					<div className="flex flex-row justify-between w-full">
+						<button
+							className="text-background bg-textColor rounded py-2 px-4 hover:bg-blue-200 transition"
+							onClick={() => setIsModalOpen(true)}
+						>
+							Add to Cart
+						</button>
+						<button
+							className="text-background bg-textColor rounded py-2 px-4 hover:bg-blue-200 transition"
+							onClick={() => {
+								window.location.reload();
+							}}
+						>
+							Refresh
+						</button>
+					</div>
+
+					{cartItems.map((item) => (
+						<CartItem item={item} key={item.id || item._id || item.name} />
+					))}
+				</div>
 			</div>
 		);
 	}
