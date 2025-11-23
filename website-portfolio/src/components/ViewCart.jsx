@@ -52,14 +52,27 @@ const ViewCart = () => {
 		loadCart();
 	}, []);
 
+	let cartContent;
+	if (cartItems.length === 0) {
+		cartContent = (
+			<p className="font-semibold text-gray-500">
+				Your items will appear here.
+			</p>
+		);
+	} else {
+		cartContent = cartItems.map((item) => <CartItem item={item} />);
+	}
+
 	return (
 		<div className="flex flex-col items-center justify-center my-[10vw]">
 			<h1 className="text-[#768F6A] px-20 py-3 flex flex-row items-center justify-between text-3xl align-middle">
-				View your cart:
+				{cartItems.length === 0 ? (
+					<span>Your cart is currently empty!</span>
+				) : (
+					<span>View your cart:</span>
+				)}
 			</h1>
-			{cartItems.map((item) => (
-				<CartItem item={item} />
-			))}
+			{cartContent}
 		</div>
 	);
 };

@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 const CreateCart = () => {
 	const navigate = useNavigate();
 	return (
-		<div clasName="flex flex-col items-center justify-center gap-4">
-			<h1 className="">
+		<div className="flex flex-col items-center justify-center gap-4">
+			<h1 className="text-4xl font-bold mb-6 text-center text-[#768F6A] mt-4">
 				You are logged in as a prime user, would you like to create a new cart?
 			</h1>
 			<button
-				className="bg-blue-700"
+				className="text-[#768F6A] bg-[#E1DACD] text-4xl p-2 rounded hover:bg-blue-200 transition"
 				onClick={async () => {
 					const response = await fetch(
 						'https://wci-neo-dev-2025api.vercel.app/cart/create',
