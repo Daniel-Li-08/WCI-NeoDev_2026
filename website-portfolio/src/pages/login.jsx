@@ -44,6 +44,8 @@ const Login = () => {
 				// show inline error message instead of an alert
 				if (error === 'Incorrect password') {
 					setErrorMessage('Incorrect password');
+				} else if (error === 'User not found') {
+					setErrorMessage('User not found');
 				} else {
 					alert('A 400 error occurred: ' + error);
 				}
@@ -63,7 +65,15 @@ const Login = () => {
 					Login
 				</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-2">
-					<p className="text-textColor font-semibold text-1xl">Username</p>
+					<p
+						className={`font-semibold text-1xl ${
+							errorMessage === 'User not found'
+								? 'text-red-500'
+								: 'text-textColor'
+						}`}
+					>
+						{errorMessage === 'User not found' ? errorMessage : 'Username'}
+					</p>
 					<input
 						type="text"
 						placeholder="Username"
@@ -82,7 +92,7 @@ const Login = () => {
 								: 'text-textColor'
 						}`}
 					>
-						{errorMessage || 'Password'}
+						{errorMessage === 'Incorrect password' ? errorMessage : 'Password'}
 					</p>
 					<input
 						type="password"
