@@ -74,8 +74,8 @@ def getUser():
         return Response("Invalid params",status=400)
     
     userRef = db.collection('Users').document(obj["name"])
-    if (userRef is None):
-        return Response("{}","User not found",status=400)
+    if (userRef.get().to_dict() is None):
+        return Response("User not found",status=400)
     
     prime = userRef.get().to_dict()["prime"]
     
@@ -95,8 +95,8 @@ def checkPw():
         return Response("Invalid params",status=400)
 
     userRef = db.collection('Users').document(obj["name"])
-    if (userRef is None):
-        return Response("{}","User not found",status=400)
+    if (userRef.get().to_dict() is None):
+        return Response("User not found",status=400)
     
     if (obj["pw"] != userRef.get().to_dict()["pw"]):
         return Response("Incorrect password",status=400)
@@ -115,12 +115,12 @@ def setCart():
         return Response("Invalid params",status=400)
 
     userRef = db.collection('Carts').document(obj["owner"])
-    if (userRef is None):
-        return Response("{}","Cart not found",status=400)
+    if (userRef.get().to_dict() is None):
+        return Response("Cart not found",status=400)
 
     userRef = db.collection('Users').document(obj["name"])
-    if (userRef is None):
-        return Response("{}","User not found",status=400)
+    if (userRef.get().to_dict() is None):
+        return Response("User not found",status=400)
     
     x = userRef.get().to_dict()
     x['cart'] = obj['owner']
@@ -141,7 +141,7 @@ def UsergetCart():
 
     userRef = db.collection('Users').document(obj["name"])
     if (userRef is None):
-        return Response("{}","User not found",status=400)
+        return Response("User not found",status=400)
     
     x = userRef.get().to_dict()['cart']
 

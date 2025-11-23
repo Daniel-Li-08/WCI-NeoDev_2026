@@ -69,23 +69,3 @@ def deleteCart():
 
     return Response("Passed",status=200)
 
-
-@cartRoutes.route('/cart/getCart', methods=["POST"])
-def getCart():
-    data = request.get_json()
-    obj:dict = json.loads(data)
-
-    params = ['owner']
-
-    if not paramsEqual(params,obj.keys()):
-        return Response("Invalid params",status=400)
-    
-    userRef = db.collection('Carts').document(obj["owner"])
-    if (userRef is None):
-        return Response("{}","Carts not found",status=400)
-    
-    items = userRef.get().to_dict()["items"]
-    
-    
-
-    return Response(json.dumps({"owner":obj["owner"],"items":items}),status=200)

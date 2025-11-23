@@ -35,6 +35,12 @@ def setCartTest(name:str, owner:str):
         "name":name,
         "owner":owner,
     })).text)
-# createUserTest("MeMyselfAndI","testPass",True)
-setCartTest("admin","test")
-getCartTest("test")
+
+def checkPwTesT(name:str,pw:str):
+    print(requests.post('http://127.0.0.1:5000/user/checkpw', json=json.dumps({
+        "name":name,
+        "pw":pw,
+    })).text)
+
+checkPwTesT("primsade","prime")
+
