@@ -169,6 +169,89 @@ function isAmazonUrl(url) {
   }
 }
 
+
+// robust helper: try repeatedly to set quantity on the page without throwing
+async function setQuantity(tabId, quantity, timeout = 8000, interval = 500) {
+  if (!quantity || quantity <= 1) return false;
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    try {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId },
+        func: (qty) => {
+          try {
+            const selectors = [
+              'select#quantity',
+              'select#quantity_1',
+              'select[name="quantity"]',
+              'select#qty',
+              'select#native-dropdown-select-quantity',
+              'input#quantity',
+              'input[name="quantity"]',
+              'input#qty'
+            ];
+            function setElValue(el, val) {
+              try {
+                const tag = (el.tagName || '').toLowerCase();
+                if (tag === 'select') {
+                  // try to pick an option that matches value or text
+                  const options = Array.from(el.options || []);
+                  const opt = options.find(o => o.value == String(val) || (o.text || '').trim() == String(val) || (o.text || '').includes(String(val)));
+                  if (opt) {
+                    el.value = opt.value;
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                    return true;
+                  }
+                  // fallback: try setting value directly
+                  el.value = String(val);
+                  el.dispatchEvent(new Event('change', { bubbles: true }));
+                  return true;
+                } else {
+                  el.focus && el.focus();
+                  el.value = String(val);
+                  el.dispatchEvent(new Event('input', { bubbles: true }));
+                  el.dispatchEvent(new Event('change', { bubbles: true }));
+                  el.blur && el.blur();
+                  return true;
+                }
+              } catch (e) {
+                return false;
+              }
+            }
+
+            for (const sel of selectors) {
+              try {
+                const el = document.querySelector(sel);
+                if (el && setElValue(el, qty)) return true;
+              } catch (e) { /* ignore per-selector errors */ }
+            }
+
+            // fallback: find labels or nearby controls mentioning "quantity"
+            const texts = Array.from(document.querySelectorAll('label, span, div')).filter(n => (n.innerText || '').toLowerCase().includes('quantity'));
+            for (const t of texts) {
+              const el = t.querySelector('select, input');
+              if (el && setElValue(el, qty)) return true;
+              // try closest selectable control
+              const close = t.closest('form, div, section')?.querySelector('select, input');
+              if (close && setElValue(close, qty)) return true;
+            }
+
+            return false;
+          } catch (e) {
+            return false;
+          }
+        },
+        args: [quantity]
+      });
+      if (Array.isArray(results) && results.length && results[0].result) return true;
+    } catch (e) {
+      // ignore injection errors and retry
+    }
+    await sleep(interval);
+  }
+  return false;
+}
+
 // replace addLink to accept qty and store it
 async function addLink(title, qty = 1) {
   const tab = await getActiveTab();
@@ -272,6 +355,10 @@ async function openAll(interval = 3000) {
     // wait for load, then try inject click
     await waitForTabComplete(tab.id);
     try {
+      await setQuantity(
+        tab.id, 
+        link.qty
+      )
       await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => {
@@ -333,23 +420,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const titleInput = document.getElementById('title');
   const qtyInput = document.getElementById('quantity');
 
-  form.addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    const title = titleInput.value.trim();
-    const qty = parseInt(qtyInput.value, 10) || 1;
-    try {
-      await addLink(title, qty);
-      titleInput.value = '';
-      qtyInput.value = '1';
-      render();
-    } catch (e) {
-      alert('Unable to add current page — make sure a regular webpage is active and it is an Amazon product page.');
-    }
-  });
-
   document.getElementById('openAll').addEventListener('click', async () => {
     // ask background to cycle through all saved links and click add-to-cart on each
-    chrome.runtime.sendMessage({ action: 'cycleAll', interval: 3000 });
+    console.log("Open All");
+    openAll();
+    
   });
 
   document.getElementById('clearAll').addEventListener('click', async () => {
