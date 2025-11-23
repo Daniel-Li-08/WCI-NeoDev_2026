@@ -1,4 +1,5 @@
 # Amaze
+By @Camleaf, @gheatherington, @Daniel-Li-08, @spedwurd, @solicht88, @TaranFlora3856
 
 **Your neighborhood's delivery shortcut.**
 
