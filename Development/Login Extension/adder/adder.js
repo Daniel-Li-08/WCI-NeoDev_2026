@@ -404,6 +404,16 @@ async function openAll(interval = 3000) {
 }
 
 async function clearAll() {
+  const nm =  await localStorage.getItem('name');
+
+    const response = await fetch("https://wci-neo-dev-2025api.vercel.app/cart/clear", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ cart: nm})
+    });
   await saveLinks([]);
 }
 
