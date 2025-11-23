@@ -56,6 +56,60 @@ const Home = () => {
 					</div>
 				</div>
 			</div>
+
+			{/* United Nations Sustainability section */}
+			<section className="w-full max-w-6xl mt-8 px-4">
+				<h3 className="text-2xl font-semibold text-[var(--text-color)] mb-4 text-center">
+					United Nations Sustainability
+				</h3>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+					{/* SDG 11 */}
+					<div className="bg-white bg-opacity-90 rounded-lg p-4 shadow-sm">
+						<h4 className="text-gray-800 font-semibold mb-2">
+							SDG 11 - Sustainable Cities
+						</h4>
+						<p className="text-gray-700 text-sm">
+							Promotes sustainable cities and communities by coordinating local
+							group deliveries, reducing vehicle trips and neighborhood
+							congestion.
+						</p>
+					</div>
+
+					{/* SDG 12 */}
+					<div className="bg-white bg-opacity-90 rounded-lg p-4 shadow-sm">
+						<h4 className="text-gray-800 font-semibold mb-2">
+							SDG 12 - Responsible Consumption
+						</h4>
+						<p className="text-gray-700 text-sm">
+							Encourages responsible consumption through consolidated orders,
+							lowering packaging use and reducing waste per person.
+						</p>
+					</div>
+
+					{/* SDG 13 */}
+					<div className="bg-white bg-opacity-90 rounded-lg p-4 shadow-sm">
+						<h4 className="text-gray-800 font-semibold mb-2">
+							SDG 13 - Climate Action
+						</h4>
+						<p className="text-gray-700 text-sm">
+							Supports climate action by minimizing delivery emissions via group
+							shipments and options for local pickup.
+						</p>
+					</div>
+
+					{/* SDG 8 */}
+					<div className="bg-white bg-opacity-90 rounded-lg p-4 shadow-sm">
+						<h4 className="text-gray-800 font-semibold mb-2">
+							SDG 8 - Economic Growth
+						</h4>
+						<p className="text-gray-700 text-sm">
+							Fosters decent work and local economic growth by enabling
+							community-led coordination and potential micro-delivery
+							opportunities.
+						</p>
+					</div>
+				</div>
+			</section>
 		</div>
 	);
 };
