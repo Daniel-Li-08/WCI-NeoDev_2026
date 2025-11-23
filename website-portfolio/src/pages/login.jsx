@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -11,8 +11,7 @@ const Login = () => {
 		if (name !== null) {
 			navigate('/cart');
 		}
-
-	});
+	}, []);
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		// Handle login logic here
@@ -53,7 +52,9 @@ const Login = () => {
 	return (
 		<div className="flex flex-col items-center justify-center my-[10vw]">
 			<div className="p-8 w-full max-w-[30rem]">
-				<h2 className="text-4xl font-bold mb-6 text-center text-[#768F6A]">Login</h2>
+				<h2 className="text-4xl font-bold mb-6 text-center text-[#768F6A]">
+					Login
+				</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col space-y-4">
 					<input
 						type="text"

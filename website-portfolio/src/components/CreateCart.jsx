@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 const CreateCart = () => {
 	const navigate = useNavigate();
 	return (
-		<div>
-			<h1>
+		<div clasName="flex flex-col items-center justify-center gap-4">
+			<h1 className="">
 				You are logged in as a prime user, would you like to create a new cart?
 			</h1>
 			<button
@@ -25,6 +25,7 @@ const CreateCart = () => {
 					if (response.ok) {
 						alert('Cart created successfully!');
 						navigate('/cart');
+						window.location.reload();
 					} else {
 						const errorData = await response.text();
 						alert(`Error creating cart: ${errorData}`);

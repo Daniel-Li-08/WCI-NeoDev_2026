@@ -38,7 +38,7 @@ const Cart = () => {
 
 	useEffect(() => {
 		checkCart();
-	});
+	}, []);
 
 	let content;
 	if (cart) {
