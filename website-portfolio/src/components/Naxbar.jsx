@@ -30,22 +30,44 @@ const Naxbar = () => {
 
 			<div className="w-full flex justify-end gap-20 px-20 align-middle">
 				{!loggedIn ? (
-					<a href="/login" className="hover:text-blue-200 transition">
+					<a
+						href="/login"
+						className={`hover:text-blue-200 transition ${
+							location.pathname === '/login' ? 'font-bold text-extraLight' : ''
+						}`}
+					>
 						Login
 					</a>
 				) : (
-					<a href="/cart" className="hover:text-blue-200 transition">
+					<a
+						href="/cart"
+						className={`hover:text-blue-200 transition ${
+							location.pathname === '/cart' ? 'font-bold text-extraLight' : ''
+						}`}
+					>
 						Cart
 					</a>
 				)}
 
-				<a href="/sign-up" className="hover:text-blue-200 transition">
-					Sign Up
-				</a>
+				{!loggedIn ? (
+					<a
+						href="/sign-up"
+						className={`hover:text-blue-200 transition ${
+							location.pathname === '/sign-up'
+								? 'font-bold text-extraLight'
+								: ''
+						}`}
+					>
+						Sign Up
+					</a>
+				) : (
+					<></>
+				)}
 
 				{localStorage.getItem('name') !== null ? (
 					<a
 						href="/"
+						className="hover:text-blue-200 transition"
 						onClick={() => {
 							logout();
 						}}
