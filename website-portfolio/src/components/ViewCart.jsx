@@ -7,6 +7,7 @@ const ViewCart = () => {
 	const [cartOwner, setCartOwner] = useState('');
 
 	const loadCart = async () => {
+		let cartName;
 		if (localStorage.getItem('prime') == 'false') {
 			const cartNameResponse = await fetch(
 				'https://wci-neo-dev-2025api.vercel.app/user/getCart',
@@ -20,9 +21,14 @@ const ViewCart = () => {
 			);
 
 			const cartNameData = await cartNameResponse.json();
-			setCartOwner(cartNameData.cart);
+			cartName = cartNameData.cart;
+			setCartOwner(cartName);
 		} else {
-			setCartOwner(localStorage.getItem('name'));
+			console.log('prime is set to true');
+			cartName = localStorage.getItem('name');
+			console.log('localStorage name: ' + localStorage.getItem('name'));
+			setCartOwner(cartName);
+			console.log('cartOwner set to: ' + cartOwner);
 		}
 		const response = await fetch(
 			'https://wci-neo-dev-2025api.vercel.app/cart/getCart',
@@ -32,7 +38,7 @@ const ViewCart = () => {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					owner: cartOwner,
+					owner: cartName,
 				}),
 			}
 		);
@@ -76,9 +82,24 @@ const ViewCart = () => {
 			</div>
 		);
 	} else {
-		cartContent = cartItems.map((item) => (
-			<CartItem item={item} key={item.id || item._id || item.name} />
-		));
+		cartContent = (
+			<div className="flex flex-col items-center justify-center gap-4">
+				{cartOwner === localStorage.getItem('name') ? (
+					<h1 className="text-4xl text-textColor font-semibold mt-6 mb-4">
+						Here is your cart <span className="text-lighter">{cartOwner}</span>
+					</h1>
+				) : (
+					<h1>
+						You are viewing <span className="text-lighter">{cartOwner}'s</span>{' '}
+						cart
+					</h1>
+				)}
+
+				{cartItems.map((item) => (
+					<CartItem item={item} key={item.id || item._id || item.name} />
+				))}
+			</div>
+		);
 	}
 
 	// render modal for adding items
