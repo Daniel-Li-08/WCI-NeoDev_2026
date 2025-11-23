@@ -9,18 +9,20 @@ const Home = () => {
 			<img
 				src="package_logo.svg"
 				alt="package"
-				className="w-80 h-80 mt-8 object-contain rounded"
+				className="w-80 h-80 object-contain rounded"
 			/>
-			<h2 className="text-textColor text-center text-3xl font-semibold mt-6 mb-4">
-				The only thing we have to fear is a big package!
-				<br /> <div className="text-2xl text-self">Wait...</div>
-			</h2>
-			<p className="text-textColor max-w-2xl text-lg text-center">
-				Explore our platform to manage your shopping carts seamlessly. Whether
-				you're adding a new cart or viewing existing items, we've got you
-				covered. Dive in and start shopping smarter today!
-			</p>
-			<div className="flex flex-row mx-10 gap-2 pt-5 justify-center text-center">
+			<div className="bg-[var(--background)] p-2 rounded-lg shadow-md mt-3 max-w-3xl">
+				<h2 className="text-textColor text-center text-3xl font-semibold mt-3 mb-3">
+					The only thing we have to fear is a big package!
+					<br /> <div className="text-2xl text-self">Wait...</div>
+				</h2>
+				<p className="text-textColor max-w-2xl text-lg text-center">
+					Explore our platform to manage your shopping carts seamlessly. Whether
+					you're adding a new cart or viewing existing items, we've got you
+					covered. Dive in and start shopping smarter today!
+				</p>
+			</div>
+			<div className="flex flex-row mx-10 gap-2 pt-2 justify-center text-center">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mt-6">
 					<div className="p-6 bg-[var(--button-color)] flex flex-col rounded-lg shadow-md">
 						<h3 className="text-[var(--text-color)] text-2xl font-semibold mb-3 text-center">

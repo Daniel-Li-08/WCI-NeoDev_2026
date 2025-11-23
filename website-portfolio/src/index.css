@@ -3,11 +3,29 @@
 @tailwind utilities;
 
 :root {
-	background-color: #fffaf0;
-	--background: #fffaf0;
-	--button-color: #e1dacd;
-	--neutral-color: #c2b9a8;
-	--extra-light: #c1dbb3;
-	--lighter: #9cba8d;
-	--text-color: #768f6a;
+	/* Base colors updated to a green-blue, natural aesthetic */
+	background-color: #f0fff7;
+	--background: #f0fff7; /* light mint background for components */
+	--button-color: #cfe8d9; /* soft mint for buttons/cards */
+	--neutral-color: #bcd8c2;
+	--extra-light: #cfeee0;
+	--lighter: #9ccaa8;
+	--text-color: #1f523e; /* darker green for text */
+
+	--bg-start: #ffffff; /* pure white start */
+	--bg-mid: #e6f9ee; /* pale mint green */
+	--bg-end: #d0f0d8;
+}
+
+/* Apply a subtle green-blue gradient to the page background */
+html,
+body,
+#root {
+	background: linear-gradient(
+		180deg,
+		var(--bg-start),
+		var(--bg-mid),
+		var(--bg-end)
+	);
+	background-attachment: fixed;
 }

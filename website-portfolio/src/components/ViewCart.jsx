@@ -97,7 +97,7 @@ const ViewCart = () => {
 					</h1>
 				)}
 
-				<div className="flex flex-col gap-2 items-center justify-center bg-extraLight p-6 rounded-2xl">
+				<div className="flex flex-col gap-2 items-center justify-center bg-extraLight mx-5 p-6 rounded-2xl">
 					<div className="flex flex-row justify-between w-full">
 						<button
 							className="text-background bg-textColor rounded py-2 px-4 hover:bg-blue-200 transition"

@@ -16,8 +16,6 @@ const AddItemModel = ({ isOpen, onClose, onAdded, apiUrl, cartOwner }) => {
 
 	if (!isOpen) return null;
 
-	const defaultApi = 'https://wci-neo-dev-2025api.vercel.app/cart/add-item';
-
 	const submit = async (e) => {
 		e.preventDefault();
 		setError('');
@@ -34,15 +32,18 @@ const AddItemModel = ({ isOpen, onClose, onAdded, apiUrl, cartOwner }) => {
 		setLoading(true);
 		try {
 			const owner = localStorage.getItem('name') || null;
-			const res = await fetch(apiUrl || defaultApi, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					url: url.trim(),
-					quantity: Number(quantity),
-					owner,
-				}),
-			});
+			const res = await fetch(
+				'https://wci-neo-dev-2025api.vercel.app/cart/additem',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						link: url.trim(),
+						quantity: Number(quantity),
+						cart: cartOwner,
+					}),
+				}
+			);
 
 			if (res.ok) {
 				const data = await res.json().catch(() => null);
