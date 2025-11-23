@@ -33,9 +33,14 @@ const AddCart = () => {
 	return (
 		<div className="flex flex-col items-center justify-center gap-2">
 			<h1 className="text-4xl font-bold mb-6 text-center text-[#768F6A] mt-4">
-				Welcome, <span className="text-[#C1DBB3]">{userName}</span>!
+				Welcome, <span className="text-[#C1DBB3]">{userName}</span>
 			</h1>
-			<h1 className="text-3xl font-bold mb-6 text-center text-[#768F6A]">
+			<img
+				src="sad_face.svg"
+				alt="Happy Face"
+				className="w-64 h-64 mt-8 object-contain rounded"
+			/>
+			<h1 className="text-neutral px-20 py-3 flex flex-row items-center justify-between text-3xl align-middle">
 				You currently aren't apart of a cart. Please add one
 			</h1>
 			<form
